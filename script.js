@@ -14,15 +14,15 @@
     name: 'جنى',
     birthDate: '2008-08-05T09:00:00', // تاريخ الميلاد
     galleryImages: [
-      { src: 'https://picsum.photos/seed/bday1/600/450', cap: 'لحظة لا تُنسى' },
-      { src: 'https://picsum.photos/seed/bday2/600/450', cap: 'ابتسامة تُخلّد' },
-      { src: 'https://picsum.photos/seed/bday3/600/450', cap: 'دفء لا يوصف' },
-      { src: 'https://picsum.photos/seed/bday4/600/450', cap: 'أثر يبقى في القلب' },
-      { src: 'https://picsum.photos/seed/bday5/600/450', cap: 'بريق عينيكِ' },
-      { src: 'https://picsum.photos/seed/bday6/600/450', cap: 'أجمل الذكريات' }
+      { src: '1.jpeg', cap: 'لحظة لا تُنسى' },
+      { src: '2.jpeg', cap: 'ابتسامة تُخلّد' },
+      { src: '3.jpeg', cap: 'دفء لا يوصف' },
+      { src: '4.jpeg', cap: 'أثر يبقى في القلب' },
+      { src: '5.jpeg', cap: 'بريق عينيكِ' },
+      { src: '6.jpeg', cap: 'أجمل الذكريات' }
     ],
     timeline: [
-      { year: '2018', icon: '🎓', title: 'بداية جديدة', desc: 'بداية فصلٍ مليء بالأحلام.' },
+      { year: '2019', icon: '🎓', title: 'بداية جديدة', desc: 'بداية فصلٍ مليء بالأحلام.' },
       { year: '2020', icon: '🌍', title: 'آفاق جديدة', desc: 'استكشاف العالم وذكريات لا تُنسى.' },
       { year: '2022', icon: '💼', title: 'إنجاز كبير', desc: 'محطة تستحق الفخر.' },
       { year: '2024', icon: '💜', title: 'أقوى من أي وقت', desc: 'محاطة بالحب وأصدقاء أوفياء.' },
@@ -37,10 +37,8 @@
       'جنى'
     ],
     memoryBook: [
-      { img: 'https://picsum.photos/seed/book1/500/280', title: 'يوم أن التقينا', date: '2015', text: 'ذكرى بدأت بها كل الحكاية.' },
-      { img: 'https://picsum.photos/seed/book2/500/280', title: 'ضحكات لا تنتهي', date: '2019', text: 'فرحٌ لا يصنعه إلا الأصدقاء.' },
-      { img: 'https://picsum.photos/seed/book3/500/280', title: 'رحلات معًا', date: '2022', text: 'كل رحلة تزداد جمالًا بوجودكِ.' },
-      { img: 'https://picsum.photos/seed/book4/500/280', title: 'نحتفل اليوم', date: '2026', text: 'وها نحن هنا، نحتفل بكِ.' }
+      { img: 'انا_وجنى.jpeg', title: 'ضحكات لا تنتهي', date: '2019', text: 'فرحٌ لا يصنعه إلا الأصدقاء.' },
+      { img: 'انا_وجنى2.jpeg', title: 'نحتفل اليوم', date: '2026', text: 'وها نحن هنا، نحتفل بكِ.' }
     ],
     reasons: [
       { icon: '💫', text: 'ابتسامتكِ تُنير كل مكان.' },
