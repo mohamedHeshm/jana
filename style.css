@@ -279,3 +279,6 @@ a{color:inherit; text-decoration:none;}
   .music-controls{padding:6px 10px; gap:6px;}
   .music-controls input[type=range]{width:60px;}
 }
+.lightbox[hidden] {
+    display: none !important;
+}
