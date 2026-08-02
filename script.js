@@ -63,6 +63,16 @@
   const $$ = (sel) => document.querySelectorAll(sel);
   const rand = (min, max) => Math.random() * (max - min) + min;
 
+  // Cap the pixel ratio used for canvas rendering. Modern phones report
+  // DPR of 2.5–4, which makes every full-screen canvas render
+  // 6–16x more pixels than a laptop. With 7 full-screen canvases animating
+  // at once this was the main cause of the freeze/hang on mobile after
+  // pressing "start". Capping it keeps things crisp while cutting the
+  // pixel workload drastically.
+  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  // Detect low-power / small-screen devices to skip the heaviest effects.
+  const IS_MOBILE = Math.min(window.innerWidth, window.innerHeight) < 820;
+
   /* =========================================================
      LOADER
   ========================================================= */
@@ -130,20 +140,20 @@
   let stars = [];
 
   function resizeCanvas(canvas) {
-    canvas.width = window.innerWidth * devicePixelRatio;
-    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.width = window.innerWidth * DPR;
+    canvas.height = window.innerHeight * DPR;
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
   }
 
   function initStars() {
     resizeCanvas(starsCanvas);
-    const count = Math.floor((window.innerWidth * window.innerHeight) / 6000);
+    const count = Math.floor((window.innerWidth * window.innerHeight) / (IS_MOBILE ? 12000 : 6000));
     stars = Array.from({ length: count }, () => ({
       x: Math.random() * starsCanvas.width,
       y: Math.random() * starsCanvas.height,
-      r: Math.random() * 1.6 * devicePixelRatio,
-      s: rand(0.05, 0.3) * devicePixelRatio,
+      r: Math.random() * 1.6 * DPR,
+      s: rand(0.05, 0.3) * DPR,
       a: Math.random()
     }));
   }
@@ -170,13 +180,19 @@
   const nebulaCanvas = $('#nebulaCanvas');
   const nebCtx = nebulaCanvas.getContext('2d');
   let nebT = 0;
+  let nebFrame = 0;
   const NEBULA_COLORS = ['#3ee8ff', '#a855f7', '#ff5fc4'];
   function drawNebula() {
-    nebT += 0.003;
+    // Skip every other frame (and 2 of 3 on mobile) — this is a soft,
+    // slow-moving background, it doesn't need full 60fps redraws.
+    nebFrame++;
+    const skip = IS_MOBILE ? 3 : 2;
+    if (nebFrame % skip !== 0) { requestAnimationFrame(drawNebula); return; }
+    nebT += 0.003 * skip;
     nebCtx.clearRect(0, 0, nebulaCanvas.width, nebulaCanvas.height);
     NEBULA_COLORS.forEach((color, i) => {
-      const cx = nebulaCanvas.width * (0.25 + i * 0.28) + Math.sin(nebT + i) * 80 * devicePixelRatio;
-      const cy = nebulaCanvas.height * 0.4 + Math.cos(nebT * 0.8 + i) * 60 * devicePixelRatio;
+      const cx = nebulaCanvas.width * (0.25 + i * 0.28) + Math.sin(nebT + i) * 80 * DPR;
+      const cy = nebulaCanvas.height * 0.4 + Math.cos(nebT * 0.8 + i) * 60 * DPR;
       const r = Math.min(nebulaCanvas.width, nebulaCanvas.height) * 0.35;
       const grad = nebCtx.createRadialGradient(cx, cy, 0, cx, cy, r);
       grad.addColorStop(0, color + '33');
@@ -197,8 +213,8 @@
     const startX = rand(0.1, 0.9) * shootCanvas.width;
     shootingStars.push({
       x: startX, y: -20,
-      vx: rand(-1.5, -0.8) * devicePixelRatio, vy: rand(2.5, 4) * devicePixelRatio,
-      len: rand(60, 120) * devicePixelRatio, life: 1, clicked: false
+      vx: rand(-1.5, -0.8) * DPR, vy: rand(2.5, 4) * DPR,
+      len: rand(60, 120) * DPR, life: 1, clicked: false
     });
   }
   function drawShootingStars() {
@@ -210,7 +226,7 @@
       shootCtx.globalAlpha = s.life;
       const grad = shootCtx.createLinearGradient(s.x, s.y, s.x - s.vx * 20, s.y - s.vy * 20);
       grad.addColorStop(0, '#fff'); grad.addColorStop(1, 'transparent');
-      shootCtx.strokeStyle = grad; shootCtx.lineWidth = 2 * devicePixelRatio;
+      shootCtx.strokeStyle = grad; shootCtx.lineWidth = 2 * DPR;
       shootCtx.beginPath(); shootCtx.moveTo(s.x, s.y);
       shootCtx.lineTo(s.x - s.vx * 20, s.y - s.vy * 20); shootCtx.stroke();
       shootCtx.restore();
@@ -220,11 +236,11 @@
   setInterval(() => { if (Math.random() < 0.7) spawnShootingStar(); }, 5000);
   document.addEventListener('click', (e) => {
     if (!shootingStars.length) return;
-    const cx = e.clientX * devicePixelRatio;
-    const cy = e.clientY * devicePixelRatio;
+    const cx = e.clientX * DPR;
+    const cy = e.clientY * DPR;
     for (let i = shootingStars.length - 1; i >= 0; i--) {
       const s = shootingStars[i];
-      if (Math.hypot(s.x - cx, s.y - cy) < 60 * devicePixelRatio) {
+      if (Math.hypot(s.x - cx, s.y - cy) < 60 * DPR) {
         showFloatingQuote('أمنيتكِ ستتحقق.');
         launchFirework(s.x, s.y);
         shootingStars.splice(i, 1);
@@ -243,14 +259,14 @@
 
   function initParticles() {
     resizeCanvas(particlesCanvas);
-    particles = Array.from({ length: 18 }, () => spawnParticle());
+    particles = Array.from({ length: IS_MOBILE ? 10 : 18 }, () => spawnParticle());
   }
   function spawnParticle() {
     return {
       x: Math.random() * particlesCanvas.width,
       y: particlesCanvas.height + Math.random() * particlesCanvas.height,
-      size: rand(16, 34) * devicePixelRatio,
-      speed: rand(0.3, 1) * devicePixelRatio,
+      size: rand(16, 34) * DPR,
+      speed: rand(0.3, 1) * DPR,
       drift: rand(-0.3, 0.3),
       emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
       rot: rand(0, 360)
@@ -350,8 +366,8 @@
   function spawnSparkle(x, y) {
     if (Math.random() > 0.5) return;
     sparkles.push({
-      x: x * devicePixelRatio, y: y * devicePixelRatio,
-      r: rand(1, 3) * devicePixelRatio, life: 1,
+      x: x * DPR, y: y * DPR,
+      r: rand(1, 3) * DPR, life: 1,
       color: [ '#3ee8ff', '#a855f7', '#ff5fc4', '#ffd479' ][Math.floor(rand(0,4))]
     });
   }
@@ -383,7 +399,7 @@
     const count = 60;
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count;
-      const speed = rand(2, 6) * devicePixelRatio;
+      const speed = rand(2, 6) * DPR;
       fireworkParticles.push({
         x, y,
         vx: Math.cos(angle) * speed,
@@ -396,14 +412,14 @@
   function fireworksLoop() {
     fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
     fireworkParticles.forEach((p, i) => {
-      p.vy += 0.03 * devicePixelRatio;
+      p.vy += 0.03 * DPR;
       p.x += p.vx; p.y += p.vy;
       p.life -= 0.012;
       if (p.life <= 0) { fireworkParticles.splice(i, 1); return; }
       fwCtx.globalAlpha = p.life;
       fwCtx.fillStyle = p.color;
       fwCtx.beginPath();
-      fwCtx.arc(p.x, p.y, 2.5 * devicePixelRatio, 0, Math.PI * 2);
+      fwCtx.arc(p.x, p.y, 2.5 * DPR, 0, Math.PI * 2);
       fwCtx.fill();
     });
     fwCtx.globalAlpha = 1;
@@ -431,10 +447,10 @@
       confettiPieces.push({
         x: rand(0, confettiCanvas.width),
         y: -20,
-        w: rand(4, 9) * devicePixelRatio,
-        h: rand(8, 16) * devicePixelRatio,
-        vy: rand(2, 5) * devicePixelRatio,
-        vx: rand(-1.5, 1.5) * devicePixelRatio,
+        w: rand(4, 9) * DPR,
+        h: rand(8, 16) * DPR,
+        vy: rand(2, 5) * DPR,
+        vx: rand(-1.5, 1.5) * DPR,
         rot: rand(0, 360),
         vr: rand(-6, 6),
         color: CF_COLORS[Math.floor(rand(0, CF_COLORS.length))],
@@ -548,10 +564,13 @@
     resizeAll();
     drawStars(); drawNebula(); drawParticles(); drawSparkles(); confettiLoop(); fireworksLoop(); drawShootingStars();
     startMusic();
-    burstConfetti(120);
-    startFireworksShow(3000);
+    burstConfetti(IS_MOBILE ? 60 : 120);
+    // Stagger the fireworks show and balloons by a beat so the confetti
+    // burst + 7 canvas loops starting up don't all hit the main thread
+    // on the exact same frame (this was causing the mobile freeze).
+    setTimeout(() => startFireworksShow(3000), 250);
     startFloatingQuoteCycle();
-    startBalloons();
+    setTimeout(() => startBalloons(), 600);
   }, { once: true });
 
   /* =========================================================
@@ -636,10 +655,10 @@
     const input = $('#wishInput');
     const text = input.value.trim();
     if (!text) return;
-    const startX = window.innerWidth / 2 * devicePixelRatio;
-    const startY = window.innerHeight * 0.7 * devicePixelRatio;
+    const startX = window.innerWidth / 2 * DPR;
+    const startY = window.innerHeight * 0.7 * DPR;
     wishStars.push({
-      x: startX, y: startY, vx: rand(-0.4, 0.4), vy: -rand(2, 3.4) * devicePixelRatio,
+      x: startX, y: startY, vx: rand(-0.4, 0.4), vy: -rand(2, 3.4) * DPR,
       life: 1, text
     });
     input.value = '';
@@ -649,14 +668,14 @@
     wishCtx.clearRect(0, 0, wishCanvas.width, wishCanvas.height);
     wishStars.forEach((w, i) => {
       w.x += w.vx; w.y += w.vy; w.life -= 0.006;
-      if (Math.random() > 0.6) spawnSparkle(w.x / devicePixelRatio, w.y / devicePixelRatio);
+      if (Math.random() > 0.6) spawnSparkle(w.x / DPR, w.y / DPR);
       if (w.life <= 0) { wishStars.splice(i, 1); return; }
       wishCtx.save();
       wishCtx.globalAlpha = w.life;
       wishCtx.fillStyle = '#ffd479';
       wishCtx.shadowColor = '#ffd479'; wishCtx.shadowBlur = 20;
       wishCtx.beginPath();
-      wishCtx.arc(w.x, w.y, 5 * devicePixelRatio, 0, Math.PI * 2);
+      wishCtx.arc(w.x, w.y, 5 * DPR, 0, Math.PI * 2);
       wishCtx.fill();
       wishCtx.restore();
     });
