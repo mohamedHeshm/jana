@@ -336,12 +336,12 @@
     createClickRipple(e.clientX, e.clientY);
   });
   const heroParallax = $('#heroParallax');
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   window.addEventListener('mousemove', (e) => {
+    if (!supportsHover) return;
     if (window.scrollY > window.innerHeight) return;
     const nx = (e.clientX / window.innerWidth - 0.5) * 20;
     const ny = (e.clientY / window.innerHeight - 0.5) * 20;
-    heroParallax.style.setProperty('--mx', nx + 'px');
-    heroParallax.style.setProperty('--my', ny + 'px');
     heroParallax.style.translate = `${nx}px ${ny}px`;
   });
   function createClickRipple(x, y) {
