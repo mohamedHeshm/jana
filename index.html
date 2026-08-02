@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Birthday — Nour ✨</title>
+<meta name="description" content="An interactive cinematic birthday celebration website with music, cake, gallery and timeline.">
+<meta name="theme-color" content="#0a0a1f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===================== LOADING SCREEN ===================== -->
+<div id="loader" class="loader" role="status" aria-label="Loading">
+  <div class="loader-cake">🎂</div>
+  <div class="loader-text">Preparing the celebration...</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- ===================== SCROLL PROGRESS ===================== -->
+<div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+
+<!-- ===================== CUSTOM CURSOR (desktop) ===================== -->
+<div id="cursorDot" class="cursor-dot" aria-hidden="true"></div>
+<div id="cursorRing" class="cursor-ring" aria-hidden="true"></div>
+
+<!-- ===================== CANVAS LAYERS ===================== -->
+<canvas id="starsCanvas" aria-hidden="true"></canvas>
+<canvas id="particlesCanvas" aria-hidden="true"></canvas>
+<canvas id="fireworksCanvas" aria-hidden="true"></canvas>
+<canvas id="confettiCanvas" aria-hidden="true"></canvas>
+<canvas id="sparkleCanvas" aria-hidden="true"></canvas>
+
+<!-- ===================== START OVERLAY ===================== -->
+<section id="startOverlay" class="start-overlay">
+  <div class="start-inner">
+    <h1 class="intro-title">
+      <span class="glow-text">Happy</span> <span class="glow-text pink">Birthday</span>
+    </h1>
+    <p class="intro-name" id="introName" data-text="Nour"></p>
+    <p class="intro-welcome">A celebration made just for you 🎉</p>
+    <button id="startBtn" class="btn-start" aria-label="Start Celebration">
+      <span>Start Celebration 🎉</span>
+    </button>
+  </div>
+</section>
+
+<!-- ===================== MUSIC CONTROLS ===================== -->
+<div id="musicControls" class="music-controls" aria-label="Music controls">
+  <button id="playPauseBtn" class="icon-btn" aria-label="Play or pause music">⏸</button>
+  <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume">
+  <span class="music-note">🎵</span>
+</div>
+
+<!-- ===================== THEME TOGGLE ===================== -->
+<button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark/light mode">🌙</button>
+
+<!-- ===================== BACK TO TOP ===================== -->
+<button id="backToTop" class="icon-btn back-to-top" aria-label="Back to top">↑</button>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main id="mainContent" class="main-content" hidden>
+
+  <!-- HERO -->
+  <section class="section hero-section" id="hero">
+    <div class="parallax-layer" data-speed="0.3">
+      <h1 class="hero-title">
+        <span class="shine-text">Happy Birthday</span>
+      </h1>
+      <p class="hero-name" id="heroName"></p>
+      <p class="hero-sub">Wishing you a year full of magic, love & light ✨</p>
+      <a href="#countdown" class="btn-glow">Discover the Celebration ↓</a>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN / AGE -->
+  <section class="section countdown-section" id="countdown">
+    <h2 class="section-title">Your Life in Numbers</h2>
+    <div class="countdown-grid" id="countdownGrid">
+      <div class="count-card"><span class="count-num" id="cAge">0</span><span class="count-label">Years Old</span></div>
+      <div class="count-card"><span class="count-num" id="cYears">0</span><span class="count-label">Years</span></div>
+      <div class="count-card"><span class="count-num" id="cMonths">0</span><span class="count-label">Months</span></div>
+      <div class="count-card"><span class="count-num" id="cDays">0</span><span class="count-label">Days</span></div>
+      <div class="count-card"><span class="count-num" id="cHours">0</span><span class="count-label">Hours</span></div>
+      <div class="count-card"><span class="count-num" id="cMinutes">0</span><span class="count-label">Minutes</span></div>
+      <div class="count-card"><span class="count-num" id="cSeconds">0</span><span class="count-label">Seconds</span></div>
+    </div>
+  </section>
+
+  <!-- CAKE -->
+  <section class="section cake-section" id="cake">
+    <h2 class="section-title">Make a Wish 🌟</h2>
+    <div class="cake-wrap">
+      <div class="cake" id="cakeEl">
+        <div class="flame f1"></div><div class="flame f2"></div><div class="flame f3"></div>
+        <div class="candle c1"></div><div class="candle c2"></div><div class="candle c3"></div>
+        <div class="cake-top"></div>
+        <div class="cake-layer layer3"></div>
+        <div class="cake-layer layer2"></div>
+        <div class="cake-layer layer1"></div>
+        <div class="cake-plate"></div>
+      </div>
+    </div>
+    <button id="blowBtn" class="btn-glow gold">Blow the Candles 🕯️</button>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section gallery-section" id="gallery">
+    <h2 class="section-title">Beautiful Memories</h2>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section timeline-section" id="timeline">
+    <h2 class="section-title">A Journey Through Time</h2>
+    <div class="timeline" id="timelineList"></div>
+  </section>
+
+  <!-- LETTER -->
+  <section class="section letter-section" id="letter">
+    <h2 class="section-title">A Letter For You</h2>
+    <div class="letter-card">
+      <p class="letter-text" id="letterText" data-full="Dear Nour,
+
+On this special day, I just want you to know how much joy you bring into the lives of everyone around you. May this new year of your life be filled with laughter, success, and unforgettable moments.
+
+Happy Birthday, and here's to many more beautiful years ahead!
+
+With love,
+Your Friends & Family"></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Made with 💜 for an unforgettable birthday.</p>
+  </footer>
+
+</main>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div id="lightbox" class="lightbox" hidden>
+  <button id="lightboxClose" class="lightbox-close" aria-label="Close">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<audio id="bgMusic" loop preload="none"></audio>
+
+<script src="script.js" defer></script>
+</body>
+</html>
