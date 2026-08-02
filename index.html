@@ -1,99 +1,117 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Happy Birthday — Nour ✨</title>
-<meta name="description" content="An interactive cinematic birthday celebration website with music, cake, gallery and timeline.">
-<meta name="theme-color" content="#0a0a1f">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>عيد ميلاد سعيد — جنى ✨</title>
+  <meta name="description" content="رحلة سينمائية تفاعلية احتفالًا بعيد ميلاد جنى ، صُنعت بكل حب.">
+  <meta name="theme-color" content="#0a0a1f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ===================== LOADING SCREEN ===================== -->
-<div id="loader" class="loader" role="status" aria-label="Loading">
+<!-- LOADER -->
+<div id="loader" class="loader" role="status" aria-label="جارِ التحميل">
   <div class="loader-cake">🎂</div>
-  <div class="loader-text">Preparing the celebration...</div>
+  <div class="loader-text">نُجهّز لكِ الاحتفال...</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
 
-<!-- ===================== SCROLL PROGRESS ===================== -->
 <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
-
-<!-- ===================== CUSTOM CURSOR (desktop) ===================== -->
 <div id="cursorDot" class="cursor-dot" aria-hidden="true"></div>
 <div id="cursorRing" class="cursor-ring" aria-hidden="true"></div>
+<div id="clickRipples" aria-hidden="true"></div>
 
-<!-- ===================== CANVAS LAYERS ===================== -->
+<!-- CANVAS LAYERS -->
 <canvas id="starsCanvas" aria-hidden="true"></canvas>
+<canvas id="nebulaCanvas" aria-hidden="true"></canvas>
 <canvas id="particlesCanvas" aria-hidden="true"></canvas>
 <canvas id="fireworksCanvas" aria-hidden="true"></canvas>
 <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 <canvas id="sparkleCanvas" aria-hidden="true"></canvas>
+<canvas id="shootingStarCanvas" aria-hidden="true"></canvas>
 
-<!-- ===================== START OVERLAY ===================== -->
-<section id="startOverlay" class="start-overlay">
+<!-- CINEMATIC INTRO -->
+<section id="cinematicIntro" class="cinematic-intro">
+  <div class="cine-line" id="cineLine">✨ في مكانٍ ما...</div>
+  <button id="skipIntro" class="skip-intro">تخطي ⏭</button>
+</section>
+
+<!-- START OVERLAY -->
+<section id="startOverlay" class="start-overlay" hidden>
   <div class="start-inner">
-    <h1 class="intro-title">
-      <span class="glow-text">Happy</span> <span class="glow-text pink">Birthday</span>
-    </h1>
-    <p class="intro-name" id="introName" data-text="Nour"></p>
-    <p class="intro-welcome">A celebration made just for you 🎉</p>
-    <button id="startBtn" class="btn-start" aria-label="Start Celebration">
-      <span>Start Celebration 🎉</span>
-    </button>
+    <h1 class="intro-title"><span class="glow-text">عيد</span> <span class="glow-text pink">ميلاد سعيد</span></h1>
+    <p class="intro-name" id="introName" data-text="جنى"></p>
+    <p class="intro-welcome">الكون بأكمله يحتفل بكِ الليلة 🌌</p>
+    <button id="startBtn" class="btn-start"><span>✨ ابدئي الرحلة ✨</span></button>
   </div>
 </section>
 
-<!-- ===================== MUSIC CONTROLS ===================== -->
-<div id="musicControls" class="music-controls" aria-label="Music controls">
-  <button id="playPauseBtn" class="icon-btn" aria-label="Play or pause music">⏸</button>
-  <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume">
-  <span class="music-note">🎵</span>
+<!-- MUSIC CONTROLS -->
+<div id="musicControls" class="music-controls" aria-label="التحكم بالموسيقى">
+  <div class="vinyl" id="vinyl"><div class="vinyl-hole"></div></div>
+  <button id="playPauseBtn" class="icon-btn" aria-label="تشغيل أو إيقاف الموسيقى">⏸</button>
+  <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="مستوى الصوت">
+  <div class="eq" id="eq"><span></span><span></span><span></span><span></span></div>
 </div>
 
-<!-- ===================== THEME TOGGLE ===================== -->
-<button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark/light mode">🌙</button>
+<button id="themeToggle" class="icon-btn theme-toggle" aria-label="تبديل الوضع الداكن والفاتح">🌙</button>
+<button id="backToTop" class="icon-btn back-to-top" aria-label="العودة للأعلى">↑</button>
 
-<!-- ===================== BACK TO TOP ===================== -->
-<button id="backToTop" class="icon-btn back-to-top" aria-label="Back to top">↑</button>
+<!-- FLOATING QUOTE -->
+<div id="floatingQuote" class="floating-quote" aria-hidden="true"></div>
 
-<!-- ===================== MAIN CONTENT ===================== -->
 <main id="mainContent" class="main-content" hidden>
 
   <!-- HERO -->
   <section class="section hero-section" id="hero">
-    <div class="parallax-layer" data-speed="0.3">
-      <h1 class="hero-title">
-        <span class="shine-text">Happy Birthday</span>
-      </h1>
+    <div class="parallax-layer" data-speed="0.3" id="heroParallax">
+      <p class="hero-pretitle reveal">إلى أجمل روحٍ عرفتها الحياة...</p>
+      <h1 class="hero-title"><span class="shine-text">عيد ميلاد سعيد</span></h1>
       <p class="hero-name" id="heroName"></p>
-      <p class="hero-sub">Wishing you a year full of magic, love & light ✨</p>
-      <a href="#countdown" class="btn-glow">Discover the Celebration ↓</a>
+      <p class="hero-sub">كل نجمة في السماء الليلة تحتفل بميلادكِ.</p>
+      <a href="#countdown" class="btn-glow">اكتشفي الاحتفال ↓</a>
     </div>
   </section>
 
-  <!-- COUNTDOWN / AGE -->
-  <section class="section countdown-section" id="countdown">
-    <h2 class="section-title">Your Life in Numbers</h2>
-    <div class="countdown-grid" id="countdownGrid">
-      <div class="count-card"><span class="count-num" id="cAge">0</span><span class="count-label">Years Old</span></div>
-      <div class="count-card"><span class="count-num" id="cYears">0</span><span class="count-label">Years</span></div>
-      <div class="count-card"><span class="count-num" id="cMonths">0</span><span class="count-label">Months</span></div>
-      <div class="count-card"><span class="count-num" id="cDays">0</span><span class="count-label">Days</span></div>
-      <div class="count-card"><span class="count-num" id="cHours">0</span><span class="count-label">Hours</span></div>
-      <div class="count-card"><span class="count-num" id="cMinutes">0</span><span class="count-label">Minutes</span></div>
-      <div class="count-card"><span class="count-num" id="cSeconds">0</span><span class="count-label">Seconds</span></div>
+  <!-- EMOTIONAL COUNTDOWN -->
+  <section class="section countdown-section reveal-section" id="countdown">
+    <h2 class="section-title">عمركِ بالأرقام</h2>
+    <div class="emo-grid">
+      <div class="emo-card reveal"><span class="emo-num" data-target="0" id="emoDays">0</span><span class="emo-label">يوم من الابتسامات 😊</span></div>
+      <div class="emo-card reveal"><span class="emo-num" data-target="0" id="emoHours">0</span><span class="emo-label">ساعة من الحب ❤️</span></div>
+      <div class="emo-card reveal"><span class="emo-num" data-target="0" id="emoMinutes">0</span><span class="emo-label">دقيقة ألهمتِ فيها من حولكِ ✨</span></div>
     </div>
+    <div class="countdown-grid" id="countdownGrid">
+      <div class="count-card reveal"><span class="count-num" id="cAge">0</span><span class="count-label">سنة من عمركِ</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cYears">0</span><span class="count-label">سنة</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cMonths">0</span><span class="count-label">شهر</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cDays">0</span><span class="count-label">يوم</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cHours">0</span><span class="count-label">ساعة</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cMinutes">0</span><span class="count-label">دقيقة</span></div>
+      <div class="count-card reveal"><span class="count-num" id="cSeconds">0</span><span class="count-label">ثانية</span></div>
+    </div>
+  </section>
+
+  <!-- MAKE A WISH -->
+  <section class="section wish-section reveal-section" id="wishSection">
+    <h2 class="section-title">اكتبي أمنية</h2>
+    <div class="wish-box">
+      <input id="wishInput" type="text" placeholder="اكتبي أمنيتكِ هنا..." maxlength="80" aria-label="أمنيتكِ">
+      <button id="sendWishBtn" class="btn-glow gold">أرسليها ✨</button>
+    </div>
+    <canvas id="wishCanvas" aria-hidden="true"></canvas>
   </section>
 
   <!-- CAKE -->
-  <section class="section cake-section" id="cake">
-    <h2 class="section-title">Make a Wish 🌟</h2>
+  <section class="section cake-section reveal-section" id="cake">
+    <h2 class="section-title">تمنّي أمنية 🌟</h2>
+    <div class="cake-countdown" id="cakeCountdown" hidden></div>
     <div class="cake-wrap">
       <div class="cake" id="cakeEl">
+        <div class="smoke s1"></div><div class="smoke s2"></div><div class="smoke s3"></div>
         <div class="flame f1"></div><div class="flame f2"></div><div class="flame f3"></div>
         <div class="candle c1"></div><div class="candle c2"></div><div class="candle c3"></div>
         <div class="cake-top"></div>
@@ -103,48 +121,113 @@
         <div class="cake-plate"></div>
       </div>
     </div>
-    <button id="blowBtn" class="btn-glow gold">Blow the Candles 🕯️</button>
+    <button id="blowBtn" class="btn-glow gold">أطفئي الشموع 🕯️</button>
+    <p class="mic-hint" id="micHint">🎤 انفخي في الميكروفون، أو اضغطي الزر</p>
+    <p class="cake-hint-secret">.. جرّبي تضغطي على الكيكة 5 مرات 👀</p>
   </section>
 
   <!-- GALLERY -->
-  <section class="section gallery-section" id="gallery">
-    <h2 class="section-title">Beautiful Memories</h2>
+  <section class="section gallery-section reveal-section" id="gallery">
+    <h2 class="section-title">ذكريات جميلة</h2>
     <div class="gallery-grid" id="galleryGrid"></div>
   </section>
 
-  <!-- TIMELINE -->
-  <section class="section timeline-section" id="timeline">
-    <h2 class="section-title">A Journey Through Time</h2>
-    <div class="timeline" id="timelineList"></div>
-  </section>
-
-  <!-- LETTER -->
-  <section class="section letter-section" id="letter">
-    <h2 class="section-title">A Letter For You</h2>
-    <div class="letter-card">
-      <p class="letter-text" id="letterText" data-full="Dear Nour,
-
-On this special day, I just want you to know how much joy you bring into the lives of everyone around you. May this new year of your life be filled with laughter, success, and unforgettable moments.
-
-Happy Birthday, and here's to many more beautiful years ahead!
-
-With love,
-Your Friends & Family"></p>
+  <!-- MEMORY BOOK -->
+  <section class="section book-section reveal-section" id="memoryBook">
+    <h2 class="section-title">دفتر ذكرياتنا</h2>
+    <div class="book" id="memoryBookEl">
+      <button class="book-nav prev" id="bookPrev" aria-label="الصفحة السابقة">‹</button>
+      <div class="book-page" id="bookPage"></div>
+      <button class="book-nav next" id="bookNext" aria-label="الصفحة التالية">›</button>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>Made with 💜 for an unforgettable birthday.</p>
-  </footer>
+  <!-- REASONS WE LOVE YOU -->
+  <section class="section reasons-section reveal-section" id="reasons">
+    <h2 class="section-title">أسباب نحبكِ لأجلها</h2>
+    <div class="flip-grid" id="flipGrid"></div>
+  </section>
 
+  <!-- TIMELINE -->
+  <section class="section timeline-section reveal-section" id="timeline">
+    <h2 class="section-title">رحلة عبر الزمن</h2>
+    <div class="timeline" id="timelineList"></div>
+  </section>
+
+  <!-- GIFT BOX -->
+  <section class="section gift-section reveal-section" id="giftSection">
+    <h2 class="section-title">هدية صغيرة لكِ</h2>
+    <div class="gift-box" id="giftBox">
+      <div class="gift-lid"></div>
+      <div class="gift-base"></div>
+    </div>
+    <p class="gift-message" id="giftMessage" hidden>💌 أنتِ محبوبة أكثر مما تتخيلين.</p>
+  </section>
+
+  <!-- LETTER -->
+  <section class="section letter-section reveal-section" id="letter">
+    <h2 class="section-title">رسالة إليكِ</h2>
+    <div class="envelope" id="envelope">
+      <div class="letter-card">
+        <p class="letter-text" id="letterText" data-full="كل عام وأنتِ أجمل صدفة وأغلى نعمة دخلت حياتي يا جنى. 🤍
+
+في يوم ميلادك مش عاوز اقولك عيد ميلاد سعيد عشان الكلمات دي أصغر بكثير من كل المشاعر ال عاوز  أوصلها ليكي. عاوز أقول إن  اليوم دا  هو اليوم ال جيتي فيه إلى الدنيا  كا  شخص قدر يخليها أجمل بمجرد وجودك  فيها.
+
+يا جنى...
+أتمنى أن يكون عامك الجديد مليان  بالضحكات ال مبتخلصش  والأحلام تتحقق  والأيام ال تشيل ليكي كل الخير والسعادة. أتمنى أن يضحك ليكي القدر دائمًا وأن يتكتب ليكي  من الفرح أضعاف ما تتمني.
+
+بحب اشوفك سعيدة، عشان ابتسامتك قادرة على أن تغيّر يوم كامل، ونظرة واحدة منك تخلي القلب يحس براحه  وجودك في حياتي خلى للأيام طعم مختلف  وخلى للحاجات الصغيرة قيمة كبيرة.
+
+في عيد ميلادك، أدعي ربنا أن يحفظك من كل حزن، وأن يحقق ليكي كل أمنية خبتيها  في قلبك، وأن يجعل سنواتك القادمة أجمل من كل ما مضى. أتمنى أن تبقي دائمًا كما أنتِ... نقية، جميلة، وطيبة القلب.
+
+ولو كان يمكن أن أقدم ليكي  هدية تليق بيكِي، مكنتش هلاقي  أجمل من وعد صادق: أن أظل أدعو لكِ بالسعادة، وأن أفرح لكل نجاح تعيشينه، وأن أكون دائمًا سببًا في ابتسامتك لا في دموعك.
+
+كل سنة وأنتِ أجمل حكاية، وأرق قلب، وأجمل ابتسامة.
+كل سنة وأنتِ أقرب إلى أحلامك، وأقرب إلى كل ما يسعدك.
+كل سنة وعيناكِ مليئتان بالجنى، وقلبكِ مليء بالسلام.
+
+عيد ميلاد سعيد يا جنى  يا أجمل من زاد الحياة جمالًا ي احلى واجمل جنى. 🎂✨
+
+وأخيرًا...
+أتمنى أن تتذكري هذا اليوم دائمًا بابتسامة  وتفضلي عارفه  أن هناك شخص يتمنى ليكي كل  الخير من أعماق قلبه، وبيشوف  أن وجودك وحده يستحق الاحتفال.
+
+كل عام وأنتِ بخير يا جنى، وكل عام وأنتِ أجمل من كل الكلمات، وأغلى من كل الأمنيات. ❤️
+"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL COUNTDOWN -->
+  <section class="section final-countdown-section reveal-section" id="nextBirthday">
+    <h2 class="section-title">حتى عيد ميلادكِ القادم...</h2>
+    <div class="countdown-grid" id="nextBdayGrid">
+      <div class="count-card reveal"><span class="count-num" id="nbDays">0</span><span class="count-label">يوم</span></div>
+      <div class="count-card reveal"><span class="count-num" id="nbHours">0</span><span class="count-label">ساعة</span></div>
+      <div class="count-card reveal"><span class="count-num" id="nbMinutes">0</span><span class="count-label">دقيقة</span></div>
+      <div class="count-card reveal"><span class="count-num" id="nbSeconds">0</span><span class="count-label">ثانية</span></div>
+    </div>
+  </section>
+
+  <!-- ENDING -->
+  <section class="section ending-section reveal-section" id="ending">
+    <h2 class="ending-title shine-text">شكرًا لزيارتكِ</h2>
+    <p class="ending-sub">صُنع بكل 💜</p>
+    <button id="replayBtn" class="btn-glow gold">أعيدي الاحتفال ↻</button>
+  </section>
+
+  <footer class="footer"><p>صُنع بـ 💜 من أجل عيد ميلاد لا يُنسى.</p></footer>
 </main>
 
-<!-- ===================== LIGHTBOX ===================== -->
+<!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox" hidden>
-  <button id="lightboxClose" class="lightbox-close" aria-label="Close">✕</button>
+  <button id="lightboxClose" class="lightbox-close" aria-label="إغلاق">✕</button>
+  <button id="lightboxPrev" class="lightbox-nav prev" aria-label="الصورة السابقة">‹</button>
   <img id="lightboxImg" src="" alt="">
+  <button id="lightboxNext" class="lightbox-nav next" aria-label="الصورة التالية">›</button>
 </div>
+
+<!-- SECRET MODE BANNER -->
+<div id="secretBanner" class="secret-banner" hidden>🌟 تم فتح الوضع السري 🌟</div>
 
 <audio id="bgMusic" loop preload="none"></audio>
 
