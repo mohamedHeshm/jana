@@ -484,7 +484,7 @@
      (Replace with: audioEl.src = 'assets/music.mp3'; for real file)
   ========================================================= */
   const audioEl = $('#bgMusic');
-  audioEl.src = 'النظام-2.mp3';
+  audioEl.src = 'music.mp3';
   let audioCtx = null, musicNodes = [], musicPlaying = false, musicTimeouts = [];
   const NOTES = { C4:261.6,D4:293.7,E4:329.6,F4:349.2,G4:392.0,A4:440.0,B4:493.9,C5:523.3 };
   // Simple "Happy Birthday" melody (relative durations in ms)
