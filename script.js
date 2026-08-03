@@ -485,7 +485,12 @@
   ========================================================= */
 const audioEl = document.getElementById('bgMusic');
 audioEl.src = 'music.mp3';
+audioEl.loop = true;
+audioEl.volume = 0.5;
 
+audioEl.play().catch(() => {
+  console.log("المتصفح منع التشغيل التلقائي.");
+});
   function playTone(freq, duration, startTime, gainVal = 0.15) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
