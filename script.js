@@ -480,71 +480,49 @@
   window.addEventListener('resize', resizeAll);
 
   /* =========================================================
-     MUSIC — synthesized birthday tune via Web Audio API
-     (Replace with: audioEl.src = 'assets/music.mp3'; for real file)
+     MUSIC — local audio file (music.mp3)
   ========================================================= */
-const audioEl = document.getElementById('bgMusic');
-audioEl.src = 'music.mp3';
-audioEl.loop = true;
-audioEl.volume = 0.5;
+  const audioEl = $('#bgMusic');
+  let audioCtx = null;
+  let musicPlaying = false;
 
-audioEl.play().catch(() => {
-  console.log("المتصفح منع التشغيل التلقائي.");
-});
-  function playTone(freq, duration, startTime, gainVal = 0.15) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0, startTime);
-    gain.gain.linearRampToValueAtTime(gainVal, startTime + 0.03);
-    gain.gain.linearRampToValueAtTime(0, startTime + duration / 1000);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(startTime);
-    osc.stop(startTime + duration / 1000 + 0.05);
-    musicNodes.push(osc);
+  audioEl.src = 'music.mp3';
+  audioEl.loop = true;
+  audioEl.preload = 'metadata';
+  audioEl.volume = Number(localStorage.getItem('bday_music_vol') || 0.5);
+
+  function setMusicUi(isPlaying) {
+    musicPlaying = isPlaying;
+    $('#playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+    $('#vinyl').classList.toggle('spin', isPlaying);
+    $('#eq').classList.toggle('active', isPlaying);
+    localStorage.setItem('bday_music_playing', isPlaying ? '1' : '0');
   }
 
-  function scheduleMelody(speedMultiplier = 1) {
-    if (!audioCtx) return;
-    let t = audioCtx.currentTime + 0.1;
-    MELODY.forEach(([note, dur]) => {
-      const d = dur / speedMultiplier;
-      playTone(NOTES_EXT[note], d, t);
-      t += d / 1000;
-    });
-    const totalMs = MELODY.reduce((a, [, d]) => a + d, 0) / speedMultiplier + 300;
-    const id = setTimeout(() => { if (musicPlaying) scheduleMelody(speedMultiplier); }, totalMs);
-    musicTimeouts.push(id);
+  async function startMusic() {
+    try {
+      await audioEl.play();
+      setMusicUi(true);
+    } catch (error) {
+      setMusicUi(false);
+      console.warn('Music could not start. It must be started by a user tap.', error);
+    }
   }
 
-  function clearMusicTimers() {
-    musicTimeouts.forEach(clearTimeout);
-    musicTimeouts = [];
-  }
-
-  function startMusic(speedMultiplier = 1) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    musicPlaying = true;
-    clearMusicTimers();
-    scheduleMelody(speedMultiplier);
-    $('#playPauseBtn').textContent = '⏸';
-    $('#vinyl').classList.add('spin');
-    $('#eq').classList.add('active');
-    localStorage.setItem('bday_music_playing', '1');
-  }
   function stopMusic() {
-    musicPlaying = false;
-    clearMusicTimers();
-    $('#playPauseBtn').textContent = '▶';
-    $('#vinyl').classList.remove('spin');
-    $('#eq').classList.remove('active');
-    localStorage.setItem('bday_music_playing', '0');
+    audioEl.pause();
+    setMusicUi(false);
   }
+
+  audioEl.addEventListener('play', () => setMusicUi(true));
+  audioEl.addEventListener('pause', () => setMusicUi(false));
+  audioEl.addEventListener('error', () => {
+    setMusicUi(false);
+    console.error('Could not load music.mp3');
+  });
 
   $('#playPauseBtn').addEventListener('click', () => {
-    if (musicPlaying) stopMusic(); else startMusic(cakeBlown ? 1.8 : 1);
+    if (musicPlaying) stopMusic(); else startMusic();
   });
   $('#volumeSlider').addEventListener('input', (e) => {
     audioEl.volume = e.target.value; // reserved for real <audio> playback
