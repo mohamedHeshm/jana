@@ -483,16 +483,8 @@
      MUSIC — synthesized birthday tune via Web Audio API
      (Replace with: audioEl.src = 'assets/music.mp3'; for real file)
   ========================================================= */
-  const audioEl = $('#bgMusic');
-  audioEl.src = 'music.mp3';
-  let audioCtx = null, musicNodes = [], musicPlaying = false, musicTimeouts = [];
-  const NOTES = { C4:261.6,D4:293.7,E4:329.6,F4:349.2,G4:392.0,A4:440.0,B4:493.9,C5:523.3 };
-  // Simple "Happy Birthday" melody (relative durations in ms)
-  const MELODY = [
-    ['G4',300],['G4',200],['A4',500],['G4',500],['C5',500],['B4',900],
-    ['G4',300],['G4',200],['A4',500],['G4',500],['D5',500],['C5',900],
-  ];
-  const NOTES_EXT = Object.assign({}, NOTES, { D5: 587.3 });
+const audioEl = document.getElementById('bgMusic');
+audioEl.src = 'music.mp3';
 
   function playTone(freq, duration, startTime, gainVal = 0.15) {
     const osc = audioCtx.createOscillator();
