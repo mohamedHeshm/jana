@@ -488,7 +488,10 @@
 
   audioEl.src = 'music.mp3';
   audioEl.loop = true;
-  audioEl.preload = 'metadata';
+  audioEl.preload = 'auto';
+  // Keep the existing experience: try playback immediately, then retry after
+  // the first interaction for browsers that enforce autoplay restrictions.
+  audioEl.autoplay = true;
   audioEl.volume = Number(localStorage.getItem('bday_music_vol') || 0.5);
 
   function setMusicUi(isPlaying) {
@@ -508,6 +511,11 @@
       console.warn('Music could not start. It must be started by a user tap.', error);
     }
   }
+
+  startMusic();
+  document.addEventListener('pointerdown', () => {
+    if (!musicPlaying) startMusic();
+  }, { once: true });
 
   function stopMusic() {
     audioEl.pause();

@@ -60,6 +60,14 @@
 <button id="themeToggle" class="icon-btn theme-toggle" aria-label="تبديل الوضع الداكن والفاتح">🌙</button>
 <button id="backToTop" class="icon-btn back-to-top" aria-label="العودة للأعلى">↑</button>
 
+<!-- CELEBRATION NAVIGATION -->
+<nav class="celebration-nav" aria-label="أقسام الاحتفال">
+  <a href="#hero" aria-label="البداية">✦</a>
+  <a href="#cake" aria-label="الكعكة">🎂</a>
+  <a href="#gallery" aria-label="الذكريات">♡</a>
+  <a href="#letter" aria-label="الرسالة">✉</a>
+</nav>
+
 <!-- FLOATING QUOTE -->
 <div id="floatingQuote" class="floating-quote" aria-hidden="true"></div>
 
@@ -67,17 +75,22 @@
 
   <!-- HERO -->
   <section class="section hero-section" id="hero">
+    <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+    <div class="hero-orbit orbit-two" aria-hidden="true"></div>
     <div class="parallax-layer" data-speed="0.3" id="heroParallax">
+      <span class="hero-kicker">05 • 08 • يومٌ خُلق للفرح</span>
       <p class="hero-pretitle reveal">إلى أجمل روحٍ عرفتها الحياة...</p>
       <h1 class="hero-title"><span class="shine-text">عيد ميلاد سعيد</span></h1>
       <p class="hero-name" id="heroName"></p>
       <p class="hero-sub">كل نجمة في السماء الليلة تحتفل بميلادكِ.</p>
       <a href="#countdown" class="btn-glow">اكتشفي الاحتفال ↓</a>
+      <div class="hero-scroll-hint" aria-hidden="true"><span></span>انزلي واكتشفي المفاجآت</div>
     </div>
   </section>
 
   <!-- EMOTIONAL COUNTDOWN -->
   <section class="section countdown-section reveal-section" id="countdown">
+    <p class="section-eyebrow">فصل جديد من الحكاية</p>
     <h2 class="section-title">عمركِ بالأرقام</h2>
     <div class="emo-grid">
       <div class="emo-card reveal"><span class="emo-num" data-target="0" id="emoDays">0</span><span class="emo-label">يوم من الابتسامات 😊</span></div>
@@ -97,6 +110,7 @@
 
   <!-- MAKE A WISH -->
   <section class="section wish-section reveal-section" id="wishSection">
+    <p class="section-eyebrow">لأن الأمنيات تستحق أن تُسمع</p>
     <h2 class="section-title">اكتبي أمنية</h2>
     <div class="wish-box">
       <input id="wishInput" type="text" placeholder="اكتبي أمنيتكِ هنا..." maxlength="80" aria-label="أمنيتكِ">
@@ -107,6 +121,7 @@
 
   <!-- CAKE -->
   <section class="section cake-section reveal-section" id="cake">
+    <p class="section-eyebrow">خذي نفسًا… واطلبي ما تتمنين</p>
     <h2 class="section-title">تمنّي أمنية 🌟</h2>
     <div class="cake-countdown" id="cakeCountdown" hidden></div>
     <div class="cake-wrap">
@@ -128,6 +143,7 @@
 
   <!-- GALLERY -->
   <section class="section gallery-section reveal-section" id="gallery">
+    <p class="section-eyebrow">لقطات لها مكان ثابت في القلب</p>
     <h2 class="section-title">ذكريات جميلة</h2>
     <div class="gallery-grid" id="galleryGrid"></div>
   </section>
@@ -166,6 +182,7 @@
 
   <!-- LETTER -->
   <section class="section letter-section reveal-section" id="letter">
+    <p class="section-eyebrow">من القلب، لكِ وحدكِ</p>
     <h2 class="section-title">رسالة إليكِ</h2>
     <div class="envelope" id="envelope">
       <div class="letter-card">
